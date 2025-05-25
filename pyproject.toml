@@ -36,7 +36,4 @@ dev = [
     "nbqa>=1.9.1",
     "pre-commit>=4.2.0",
     "ruff>=0.11.4",
-    "acvl-utils==0.2",
-    "totalsegmentator>=2.8.0",
-    "astra-toolbox>=2.3.1",
 ]
