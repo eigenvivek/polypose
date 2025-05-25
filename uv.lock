@@ -2783,7 +2783,6 @@ version = "0.0.0rc1"
 source = { editable = "." }
 dependencies = [
     { name = "cupy-cuda12x" },
-    { name = "huggingface-hub" },
     { name = "jaxtyping" },
     { name = "monai" },
     { name = "xvr" },
@@ -2806,7 +2805,6 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "cupy-cuda12x", specifier = ">=13.3.0" },
-    { name = "huggingface-hub", specifier = ">=0.30.0" },
     { name = "jaxtyping", specifier = ">=0.3" },
     { name = "monai", specifier = ">=1.4.0" },
     { name = "xvr", git = "https://github.com/eigenvivek/xvr.git" },

@@ -9,7 +9,6 @@ authors = [
 requires-python = ">=3.10"
 dependencies = [
     "cupy-cuda12x>=13.3.0",
-    "huggingface-hub>=0.30.0",
     "jaxtyping>=0.3",
     "monai>=1.4.0",
     "xvr",
