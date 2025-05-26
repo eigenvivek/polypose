@@ -16,6 +16,8 @@ PolyPose is a fully deformable 2D/3D registration framework.
 - 🔭 It is effective in both sparse-view and limited-angle registration.
 - 🦾 It accurately solves this highly ill-constrained problem with polyrigid transforms.
 
+![PolyPose](.github/polypose.webp)
+
 ## Tutorial
 
 After [setting up the environment](#setup), check out the tutorial notebook in [`notebooks/pelvis.ipynb`](notebooks/pelvis.ipynb) for a demonstration of PolyPose.
