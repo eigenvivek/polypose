@@ -62,3 +62,16 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 uv venv
 uv sync --all-groups
 ```
+
+## Citing `PolyPose`
+
+If you find `PolyPose` useful for your work, please cite our [paper](https://arxiv.org/abs/2505.19256):
+
+```
+@article{gopalakrishnan2025polypose,
+  title={PolyPose: Localizing Deformable Anatomy in 3D from Sparse 2D X-ray Images using Polyrigid Transforms},
+  author={Gopalakrishnan, Vivek and Dey, Neel and Golland, Polina},
+  journal={arXiv preprint arXiv:2505.19256},
+  year={2025}
+}
+```
