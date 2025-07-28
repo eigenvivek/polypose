@@ -70,6 +70,10 @@ def plot_weights(
     cmap: str = "gist_rainbow",  # Name of matplotlib colormap
     rot90: int = 1,  # Number of times to rotate slices by 90 degrees
 ):
+    # Make sure the tensors are on CPU
+    segmentations = segmentations.cpu()
+    weights = weights.cpu()
+    
     # Normalize the weight field
     alpha = weights.sum(dim=0)
     weights = weights / alpha
