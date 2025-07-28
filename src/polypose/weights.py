@@ -39,9 +39,10 @@ def compute_weights(
     masks = []
     edtmaps = []
     for label in tqdm(labels):
-        if isinstance(label, int):
-            label = [label]
+        label = [label] if isinstance(label, int) else label
         structure = torch.stack([mask == idx for idx in label]).any(dim=0)
+        if structure.sum() == 0:  # Get rid of any labels that aren't in the volume
+            continue
         if weightfn == "exp":
             edtmap = signed_distance_field(structure, spacing=spacing)
         else:
@@ -71,7 +72,7 @@ def compute_weights(
         weights.append(weight)
     weights = torch.stack(weights)
 
-    # Optionally, normalize
+    # Optionally, normalize the weights to sum to 1
     if normalize:
         weights = weights / weights.sum(dim=0, keepdim=True)
 
