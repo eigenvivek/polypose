@@ -9,7 +9,7 @@ authors = [
 requires-python = ">=3.10"
 dependencies = [
     "cupy-cuda12x>=13.3.0",
-    "diffdrr==0.5.1",
+    "diffdrr",
     "jaxtyping>=0.3",
     "monai>=1.4.0",
     "totalsegmentator>=2.10.0",
@@ -28,6 +28,7 @@ ignore = ["F722"]
 
 [tool.uv.sources]
 xvr = { git = "https://github.com/eigenvivek/xvr.git" }
+diffdrr = { git = "https://github.com/eigenvivek/DiffDRR" }
 
 [dependency-groups]
 dev = [
