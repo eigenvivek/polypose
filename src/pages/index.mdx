@@ -117,7 +117,7 @@ Given <LaTeX inline formula="\mathbf{V}" /> and <LaTeX inline formula="\mathbf{I
 
 Accurately estimating the pose of each 2D X-ray image relative to the 3D volume is of vital important for downstream estimation of the non-rigid deformation field. If these camera matrices are miscalibrated, we cannot hope to recover the deformation field  <LaTeX inline formula="\mathbf \Phi" />. 
 
-For this critical task, we use [`xvr`](https://xvr.csail.mit.edu/), the current state-of-the-art method for _rigid_ 2D/3D registration, which enables fully automatic submillimeter-accurate regsitration. Specifically, we estimate camera matrices by rigidly aligning an anchor structure that is reliably visible in the preoperative 3D volume and all intraoperative 2D views (e.g., the pelvis in the figure below).
+For this critical task, we use [`xvr`](https://xvr.csail.mit.edu/), the current state-of-the-art method for _rigid_ 2D/3D registration, which enables fully automatic submillimeter-accurate registration. Specifically, we estimate camera matrices by rigidly aligning an anchor structure that is reliably visible in the preoperative 3D volume and all intraoperative 2D views (e.g., the pelvis in the figure below).
 
 <Video source={methods_cammat} />
 
@@ -160,7 +160,7 @@ def polyrigid_deformation_field(
 
 ## Future Work
 
-There are many interesting extensions that could be made to `PolyPose`! For example, one could **enfore skeleton constraints,** requiring that all rigid bodies connected at joints influence each other via a kinematic chain. As demonstrated by the initial implementation in `PolyPose`, enforcing physics-based priors makes models more robust in sparse-data settings. 
+There are many interesting extensions that could be made to `PolyPose`! For example, one could **enforce skeleton constraints,** requiring that all rigid bodies connected at joints influence each other via a kinematic chain. As demonstrated by the initial implementation in `PolyPose`, enforcing physics-based priors makes models more robust in sparse-data settings. 
 
 Additionally, the warped CTs produced by the estimated deformation fields could be used to initialize **_post-hoc_ 3D image reconstruction** techniques (e.g., using differentiable rendering techniques such as [`DiffVox`](https://arxiv.org/abs/2411.19224)). This approach could be used to reconstruct changes from the preoperative to the intraoperative state in 3D (e.g., implanted devices, altered morphology, etc.).
 
