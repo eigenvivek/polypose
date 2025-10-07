@@ -17,11 +17,11 @@ import YouTubeVideo from "../components/YouTubeVideo.astro";
 import LaTeX from "../components/LaTeX.astro";
 import IframeGrid from "../components/IframeGrid.astro";
 
-import dogsDiffc from "../assets/dogs-diffc.png"
-import dogsTrue from "../assets/dogs-true.png"
-
 import teaser from "../assets/teaser.mp4";
 import polyexplain from "../assets/polyexplain.png"
+import methods_cammat from "../assets/methods_cammat.mp4"
+import methods_polyrigid from "../assets/methods_polyrigid.mp4"
+import weightfield from "../assets/weights.png"
 
 import CodeBlock from "../components/CodeBlock.astro";
 import Table from "../components/Table.astro";
@@ -101,6 +101,62 @@ The key advantages of `PolyPose` are:
 - Our low-dimensional model is far easier to optimize than dense displacement fields, while being just as expressive.
 - Our method is regularizer- and hyperparameter-free, enabling out-of-the-box generalization to new procedures.
 - Our anatomically motivated model is robust in challenging sparse-view and limited-angle settings.
+
+## Methods
+
+The inputs to our method are a preoperative 3D CT volume <LaTeX inline formula="\mathbf{V}" /> and a series of intraoperative 2D X-ray images <LaTeX inline formula="\mathbf{I}_1, \dots, \mathbf{I}_N" />.
+These data are related by the following image formation model:
+
+<LaTeX inline formula="\mathbf I_n = \mathcal P(\mathbf\Pi_n) \circ \mathbf{V} \circ \mathbf\Phi \,." />
+
+This equation can be understood as first warping the volume with a deformation field <LaTeX inline formula="\mathbf\Phi: \mathbb R^3 \to \mathbb R^3" />, then rendering a 2D X-ray image with a projector <LaTeX inline formula="\mathcal P" /> oriented via the camera matrix <LaTeX inline formula="\mathbf \Pi_n" />. 
+
+Given <LaTeX inline formula="\mathbf{V}" /> and <LaTeX inline formula="\mathbf{I}" /> , our goal is to solve for the camera matrices <LaTeX inline formula="\mathbf \Pi_1, \dots, \mathbf \Pi_N" /> and the deformation field <LaTeX inline formula="\mathbf \Phi" />.
+
+### Estimating the camera matrices <LaTeX inline formula="\mathbf\Pi_1, \dots, \mathbf\Pi_N" />
+
+Accurately estimating the pose of each 2D X-ray image relative to the 3D volume is of vital important for downstream estimation of the non-rigid deformation field. If these camera matrices are miscalibrated, we cannot hope to recover the deformation field  <LaTeX inline formula="\mathbf \Phi" />. 
+
+For this critical task, we use [`xvr`](https://xvr.csail.mit.edu/), the current state-of-the-art method for _rigid_ 2D/3D registration, which enables fully automatic submillimeter-accurate regsitration. Specifically, we estimate camera matrices by rigidly aligning an anchor structure that is reliably visible in the preoperative 3D volume and all intraoperative 2D views (e.g., the pelvis in the figure below).
+
+<Video source={methods_cammat} />
+
+### Optimizing the polyrigid deformation field <LaTeX inline formula="\mathbf\Phi" />
+
+Armed with accurate camera matrices, we can now fit a polyrigid deformation model!
+
+The first step is to get a rough segmentation of the rigid bodies in the 3D CT volume (I say "rough" because our ablations show that `PolyPose` is robust to massive segmentation errors). For most structures, this can be done with automated tools like [`TotalSegmentator`](https://github.com/wasserth/TotalSegmentator); applications to more unusual structures may wish to leverage semi-automated segmentation tools like [`nnInteractive`](https://github.com/MIC-DKFZ/nnInteractive). Regardless, with a 3D segmentation of <LaTeX inline formula="\mathbf V" />, we can compute a **3D weight field,** which models how much every voxel is influenced the different rigid bodies as a function of distance.
+
+<Figure>
+  <Image slot="figure" source={weightfield} altText="Slice of the weight field." />
+  <Fragment slot="caption">A 2D slice of the 3D weight field showing the relative contribution of each rigid structure to every voxel.</Fragment>
+</Figure>
+
+With this weight field, we can finally define the polyrigid transform that we wish to optimize:
+
+<LaTeX inline formula="\mathbf{\Phi}[\mathbf T_1, \dots, \mathbf T_K](\mathbf x) = \overline{\mathbf T}(\mathbf x) \tilde{\mathbf x} \,, \quad\mathrm{where}\quad \overline{\mathbf T}(\mathbf x) \triangleq \exp \left( \frac{\sum_{k=1}^K w_k(\mathbf x) \log \mathbf T_k}{\sum_{k=1}^K w_k(\mathbf x)} \right) \in \mathbf{SE}(3) \,." />
+
+That is, polyrigid deformations are _locally linear_ transforms, where the displacement at each voxel is given by a weighted average (hence the weight field) of the rigid transforms of all rigid bodies in the volume! Therefore, the only thing we need to optimize are the structure-specific rigid transforms. The optimization process if visualized below:
+
+<Video source={methods_polyrigid} />
+
+### A neat implementation trick
+
+If you inspect the formula for a polyrigid deformation, you'll notice that we don't operate directly on rigid transformations, but rather on their _log-transformed_ counterparts living in the tangent space <LaTeX inline formula="\mathfrak{se}(3)" />. This yields a very simple implementation, which is demonstrated in pseudocode below (you can find the full implementation [here](https://github.com/eigenvivek/polypose/blob/0456613f7970f66af2324e34fb678d359e12be01/src/polypose/warp.py#L73-L111)):
+
+```python
+def polyrigid_deformation_field(
+    volume: Float[torch.Tensor, "D H W"],  # A volume with C rigid bodies
+    weights: Float[torch.Tensor, "C D H W"],  # Weight field for the volume
+    log_poses: Float[torch.Tensor, "C N"],  # Log-transformed poses for the rigid bodies
+    pts: Float[torch.Tensor, "D H W 3"],  # Coordinates of the volume's voxels
+) -> Float[torch.Tensor, "D H W"]:
+    weighted_log_poses = einsum("cdhw, cn -> dhwn", weights, log_poses)
+    polyrigid_poses = exp(weighted_log_poses)
+    deformation_field = polyrigid_poses(pts)
+    warped_volume = grid_sample(volume, deformation_field)
+    return warped_volume
+```
 
 ## Future Work
 
