@@ -96,7 +96,7 @@ Deformable 2D/3D registration is a long-standing challenge. The central obstacle
 
 ### Contributions
 
-The key advantages of `PolyPose` are as follows:
+The key advantages of `PolyPose` are:
 
 - Our low-dimensional model is far easier to optimize than dense displacement fields, while being just as expressive.
 - Our method is regularizer- and hyperparameter-free, enabling out-of-the-box generalization to new procedures.
@@ -104,7 +104,7 @@ The key advantages of `PolyPose` are as follows:
 
 ## Future Work
 
-There are many interesting extensions that could be made to `PolyPose`! For example, one could **enfore skeleton constraints,** requiring that all rigid bodies connected at oints influence each other via a kinematic chain. As demonstrated by the initial implementation in `PolyPose`, enforcing physics-based priors makes models more robust in sparse-data settings. 
+There are many interesting extensions that could be made to `PolyPose`! For example, one could **enfore skeleton constraints,** requiring that all rigid bodies connected at joints influence each other via a kinematic chain. As demonstrated by the initial implementation in `PolyPose`, enforcing physics-based priors makes models more robust in sparse-data settings. 
 
 Additionally, the warped CTs produced by the estimated deformation fields could be used to initialize **_post-hoc_ 3D image reconstruction** techniques (e.g., using differentiable rendering techniques such as [`DiffVox`](https://arxiv.org/abs/2411.19224)). This approach could be used to reconstruct changes from the preoperative to the intraoperative state in 3D (e.g., implanted devices, altered morphology, etc.).
 
