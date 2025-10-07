@@ -79,15 +79,34 @@ export const components = {pre: CodeBlock, table: Table}
 ## Abstract
 `PolyPose` is a simple and robust algorithm for localizing deformable 3D anatomy from sparse 2D X-ray images. Think of it as **3D GPS for image-guided interventions,** enabling clinicians or surgical robotic systems to know exactly where critical structures are in 3D from routine 2D X-rays acquired during intraoperative navigation.
 
-Deformable 2D/3D registration is a long-standing and difficult problem. The central challenge is that soft tissues have very poor contrast on X-ray, making their complex 3D deformations nearly impossible to estimate from sparse 2D X-rays. `PolyPose` overcomes this limitation by parameterizing complex 3D deformation fields as a composition of rigid transforms, exploiting the biologic constraint that **bones do not bend in typical motion.** This yields a low-rank model of human motion that is far easier to optimize while also being highly expressive.
-
-Enforcing anatomically plausible priors by construction enables `PolyPose` to successfully align a patient's preoperative volume to **as few as two X-rays.** Across extensive experiments on diverse datasets from orthopedic surgery and radiotherapy, `PolyPose` provides accurate 3D alignment in challenging sparse-view and limited-angle settings where current registration methods fail.
+`PolyPose` achieves this by optimizing a piecewise-rigid model of human motion with differentiable X-ray rendering. By enforcing anatomically plausible priors, `PolyPose` can  successfully align a patient's high-resolution preoperative volume to **as few as two intraoperative X-rays.** Across extensive experiments on diverse datasets from orthopedic surgery and radiotherapy, `PolyPose` provides accurate 3D alignment in challenging sparse-view and limited-angle settings where current registration methods fail.
 
 </HighlightedSection>
 
+## Overview
+
+Deformable 2D/3D registration is a long-standing challenge. The central obstacle is that [soft tissues have very poor contrast on X-ray](https://radiopaedia.org/articles/abdominal-radiography). As such, it's nearly impossible to estimate their intricate deformations from a handful of (i.e., less than 10) 2D X-rays.
+
+`PolyPose` overcomes this limitation by parameterizing complex 3D deformation fields as a composition of rigid transforms, exploiting the biologic constraint that **bones do not bend in typical motion.** For example, in the scene below, combining the optimized transforms of a few rigid bodies yields a detailed, smooth (_it's actually diffeomorphic by construction!_), and accurate deformation field.
+
+<Figure>
+  <Image slot="figure" source={polyexplain} altText="Illustration of polyrigid deformation fields." />
+  <Fragment slot="caption">Illustration of a polyrigid deformation constructed from the transforms of 21 rigid bodies (skull, L/R clavicle, L/R humerus, L/R scapula, and T7-C1). Vectors in the deformation field are colored by the relative contributions of each rigid body.</Fragment>
+</Figure>
+
+### Contributions
+
+The key advantages of `PolyPose` are as follows:
+
+- Our low-dimensional model is far easier to optimize than dense displacement fields, while being just as expressive.
+- Our method is regularizer- and hyperparameter-free, enabling out-of-the-box generalization to new procedures.
+- Our anatomically motivated model is robust in challenging sparse-view and limited-angle settings.
+
 ## Future Work
 
-There are many interesting extensions that could be made to `PolyPose`! For example, one could **enfore skeleton constraints,** requiring that all rigid bodies connected at oints influence each other via a kinematic chain. As demonstrated by the initial implementation in `PolyPose`, enforcing physics-based priors makes models more robust in sparse-data settings. Additionally, the warped CTs produced by the estimated deformation fields could be used to initialize **_post-hoc_ 3D image reconstruction** techniques (e.g., using differentiable rendering techniques such as [`DiffVox`](https://arxiv.org/abs/2411.19224)). This approach could be used to reconstruct changes from the preoperative to the intraoperative state in 3D (e.g., implanted devices, altered morphology, etc.).
+There are many interesting extensions that could be made to `PolyPose`! For example, one could **enfore skeleton constraints,** requiring that all rigid bodies connected at oints influence each other via a kinematic chain. As demonstrated by the initial implementation in `PolyPose`, enforcing physics-based priors makes models more robust in sparse-data settings. 
+
+Additionally, the warped CTs produced by the estimated deformation fields could be used to initialize **_post-hoc_ 3D image reconstruction** techniques (e.g., using differentiable rendering techniques such as [`DiffVox`](https://arxiv.org/abs/2411.19224)). This approach could be used to reconstruct changes from the preoperative to the intraoperative state in 3D (e.g., implanted devices, altered morphology, etc.).
 
 ## BibTeX citation
 
