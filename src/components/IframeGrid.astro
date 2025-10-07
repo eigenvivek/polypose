@@ -1,0 +1,53 @@
+---
+export interface Props {
+  htmlFiles: string[];
+  titles?: string[];
+  width?: number;
+  height?: number;
+  columns?: number;
+  gap?: number;
+}
+
+const { 
+  htmlFiles, 
+  titles = [],
+  width = 800, 
+  height = 600, 
+  columns = 2,
+  gap = 20 
+} = Astro.props;
+
+const gridStyle = `
+  display: grid;
+  grid-template-columns: repeat(${columns}, 1fr);
+  gap: ${gap}px;
+  width: 100%;
+  max-width: ${width * columns + gap * (columns - 1)}px;
+  margin: 0 auto;
+  padding: 20px;
+  justify-content: center;
+`;
+
+const iframeStyle = `
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+`;
+---
+
+<div style={gridStyle}>
+  {htmlFiles.map((file, index) => {
+    const title = titles[index] || file.split('/').pop()?.replace('.html', '') || `Visualization ${index + 1}`;
+    const fileWithTitle = `${file}?title=${encodeURIComponent(title)}`;
+    return (
+      <iframe 
+        src={fileWithTitle} 
+        style={iframeStyle}
+        loading="lazy"
+        title={title}
+      />
+    );
+  })}
+</div>

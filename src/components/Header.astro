@@ -1,0 +1,30 @@
+---
+import type { Author, Note, Link } from "../types/types";
+import Links from "./Links.astro";
+import Authors from "./Authors.astro";
+import Notes from "./Notes.astro";
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  authors: Author[];
+  conference?: string;
+  notes?: Note[];
+  links: Link[];
+}
+
+const { title, subtitle, authors, conference, notes, links } = Astro.props as Props;
+---
+
+<header class="flex flex-col gap-3 items-center mb-0">
+  <h1 class="font-mono text-6xl whitespace-nowrap text-ellipsis">
+    <code class="bg-transparent text-inherit">{title}</code>
+  </h1>
+  {subtitle && <p class="text-center text-4xl md:text-4xl leading-tight">{subtitle}</p>}
+  {conference && <p class="text-center text-3xl md:text-3xl font-bold text-orange-600">{conference}</p>}
+  <div class="flex flex-col gap-6 items-center">
+    <Authors authors={authors} />
+    {notes && <Notes notes={notes} />}
+    {links && <Links links={links} />}
+  </div>
+</header>

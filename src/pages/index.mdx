@@ -1,0 +1,101 @@
+---
+layout: ../layouts/Layout.astro
+title: PolyPose
+description: "Deformable 2D/3D Registration via Polyrigid Transforms"
+favicon: favicon.svg
+thumbnail: thumbnail.png
+---
+
+import Header from "../components/Header.astro";
+import Video from "../components/Video.astro";
+import HighlightedSection from "../components/HighlightedSection.astro";
+import SmallCaps from "../components/SmallCaps.astro";
+import Figure from "../components/Figure.astro";
+import Image from "../components/Image.astro";
+import TwoColumns from "../components/TwoColumns.astro";
+import YouTubeVideo from "../components/YouTubeVideo.astro";
+import LaTeX from "../components/LaTeX.astro";
+import IframeGrid from "../components/IframeGrid.astro";
+
+import dogsDiffc from "../assets/dogs-diffc.png"
+import dogsTrue from "../assets/dogs-true.png"
+
+import teaser from "../assets/teaser.mov";
+import polyexplain from "../assets/polyexplain.png"
+
+import CodeBlock from "../components/CodeBlock.astro";
+import Table from "../components/Table.astro";
+export const components = {pre: CodeBlock, table: Table}
+
+<Header
+  title={frontmatter.title}
+  subtitle={frontmatter.description}
+  authors={[
+    {
+      name: "Vivek Gopalakrishnan",
+      url: "https://vivekg.dev",
+      institution: "MIT CSAIL",
+    },
+    {
+      name: "Neel Dey",
+      url: "https://www.neeldey.com/",
+      institution: "MIT, MGH, and HMS",
+    },
+    {
+      name: "Polina Golland",
+      url: "https://people.csail.mit.edu/polina/",
+      institution: "MIT CSAIL",
+    },
+  ]}
+  conference="NeurIPS 2025"
+  links={[
+    {
+      name: "Paper",
+      url: "https://arxiv.org/pdf/2505.19256.pdf",
+      icon: "ri:file-pdf-2-line",
+    },
+    {
+      name: "Code",
+      url: "https://github.com/eigenvivek/polypose",
+      icon: "ri:github-line",
+    },
+    {
+      name: "arXiv",
+      url: "https://arxiv.org/abs/2505.19256",
+      icon: "academicons:arxiv",
+    },
+    {
+      name: "Tutorial",
+      url: "https://colab.research.google.com/drive/1ui17wtfjxcjEM9QqMhD4sQXZB2NlMdlS?usp=sharing",
+      icon: "simple-icons:jupyter"
+    }
+  ]}
+  />
+
+<Video source={teaser} />
+
+<HighlightedSection>
+
+## Abstract
+`PolyPose` is a simple and robust algorithm for localizing deformable 3D anatomy from sparse 2D X-ray images. Think of it as **3D GPS for image-guided interventions,** enabling clinicians or surgical robotic systems to know exactly where critical structures are in 3D from routine 2D X-rays acquired during intraoperative navigation.
+
+Deformable 2D/3D registration is a long-standing and difficult problem. The central challenge is that soft tissues have very poor contrast on X-ray, making their complex 3D deformations nearly impossible to estimate from sparse 2D X-rays. `PolyPose` overcomes this limitation by parameterizing complex 3D deformation fields as a composition of rigid transforms, exploiting the biologic constraint that **bones do not bend in typical motion.** This yields a low-rank model of human motion that is far easier to optimize while also being highly expressive.
+
+Enforcing anatomically plausible priors by construction enables `PolyPose` to successfully align a patient's preoperative volume to **as few as two X-rays.** Across extensive experiments on diverse datasets from orthopedic surgery and radiotherapy, `PolyPose` provides accurate 3D alignment in challenging sparse-view and limited-angle settings where current registration methods fail.
+
+</HighlightedSection>
+
+## Future Work
+
+There are many interesting extensions that could be made to `PolyPose`! For example, one could **enfore skeleton constraints,** requiring that all rigid bodies connected at oints influence each other via a kinematic chain. As demonstrated by the initial implementation in `PolyPose`, enforcing physics-based priors makes models more robust in sparse-data settings. Additionally, the warped CTs produced by the estimated deformation fields could be used to initialize **_post-hoc_ 3D image reconstruction** techniques (e.g., using differentiable rendering techniques such as [`DiffVox`](https://arxiv.org/abs/2411.19224)). This approach could be used to reconstruct changes from the preoperative to the intraoperative state in 3D (e.g., implanted devices, altered morphology, etc.).
+
+## BibTeX citation
+
+```bibtex
+@misc{gopalakrishnan2025polypose,
+  title={PolyPose: Deformable 2D/3D Registration via Polyrigid Transforms},
+  author={Gopalakrishnan, Vivek and Dey, Neel and Golland, Polina},
+  journal={Advances in Neural Information Processing Systems},
+  year={2025}
+}
+```
