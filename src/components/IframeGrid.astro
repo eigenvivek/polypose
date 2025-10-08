@@ -1,53 +1,79 @@
 ---
-export interface Props {
+import LaTeX from '../components/LaTeX.astro'; // adjust path as needed
+
+interface Props {
   htmlFiles: string[];
-  titles?: string[];
-  width?: number;
-  height?: number;
-  columns?: number;
-  gap?: number;
+  titles: string[];
+  gap?: string;
 }
 
-const { 
-  htmlFiles, 
-  titles = [],
-  width = 800, 
-  height = 600, 
-  columns = 2,
-  gap = 20 
+const {
+  htmlFiles,
+  titles,
+  gap = "1rem"
 } = Astro.props;
 
-const gridStyle = `
-  display: grid;
-  grid-template-columns: repeat(${columns}, 1fr);
-  gap: ${gap}px;
-  width: 100%;
-  max-width: ${width * columns + gap * (columns - 1)}px;
-  margin: 0 auto;
-  padding: 20px;
-  justify-content: center;
-`;
-
-const iframeStyle = `
-  width: 100%;
-  aspect-ratio: 1;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-`;
+if (htmlFiles.length !== titles.length) {
+  throw new Error("The length of 'htmlFiles' and 'titles' must be the same.");
+}
 ---
 
-<div style={gridStyle}>
-  {htmlFiles.map((file, index) => {
-    const title = titles[index] || file.split('/').pop()?.replace('.html', '') || `Visualization ${index + 1}`;
-    const fileWithTitle = `${file}?title=${encodeURIComponent(title)}`;
-    return (
-      <iframe 
-        src={fileWithTitle} 
-        style={iframeStyle}
-        loading="lazy"
-        title={title}
-      />
-    );
-  })}
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--gap);
+    width: 100%;
+  }
+
+  .frame-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .iframe-container {
+    position: relative;
+    width: 100%;
+    padding-top: 100%;
+    overflow: hidden;
+  }
+
+  .iframe-title-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #e0f0ff;
+    border-bottom: 2px solid #3399ff;
+    color: #003366;
+    padding: 0.5rem;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.95rem;
+    z-index: 2;
+  }
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    z-index: 1;
+  }
+</style>
+
+<div class="grid" style={`--gap: ${gap}`}>
+  {htmlFiles.map((src, index) => (
+    <div class="frame-wrapper">
+      <div class="iframe-container">
+        <div class="iframe-title-overlay">{titles[index]}</div>
+        <iframe src={src} loading="lazy" />
+      </div>
+    </div>
+  ))}
 </div>
