@@ -15,13 +15,17 @@ import Image from "../components/Image.astro";
 import TwoColumns from "../components/TwoColumns.astro";
 import YouTubeVideo from "../components/YouTubeVideo.astro";
 import LaTeX from "../components/LaTeX.astro";
-import IframeGrid from "../components/IframeGrid.astro";
+import IFrameGrid from "../components/IFrameGrid.astro";
 
 import teaser from "../assets/teaser.mp4";
 import polyexplain from "../assets/polyexplain.png"
+import hn_qualitative from "../assets/hn_qualitative.png"
+import hn_baselines from "../assets/hn_baselines.gif"
+import pelvis_opt from "../assets/pelvis_opt.mp4"
 import methods_cammat from "../assets/methods_cammat.mp4"
 import methods_polyrigid from "../assets/methods_polyrigid.mp4"
 import weightfield from "../assets/weights.png"
+import warp_field from "../assets/warp_field.mp4"
 
 import CodeBlock from "../components/CodeBlock.astro";
 import Table from "../components/Table.astro";
@@ -77,7 +81,7 @@ export const components = {pre: CodeBlock, table: Table}
 <HighlightedSection>
 
 ## Abstract
-`PolyPose` is a simple and robust algorithm for localizing deformable 3D anatomy from sparse 2D X-ray images. Think of it as **3D GPS for image-guided interventions,** enabling clinicians or surgical robotic systems to know exactly where critical structures are in 3D from routine 2D X-rays acquired during intraoperative navigation.
+`PolyPose` is a simple and robust algorithm for localizing deformable 3D anatomy from sparse 2D X-ray images. Think of it as a **3D GPS for image-guided interventions,** enabling clinicians or surgical robotic systems to know exactly where critical structures are in 3D from routine 2D X-rays acquired during intraoperative navigation.
 
 `PolyPose` achieves this by optimizing a piecewise-rigid model of human motion with differentiable X-ray rendering. By enforcing anatomically plausible priors, `PolyPose` can  successfully align a patient's high-resolution preoperative volume to **as few as two intraoperative X-rays.** Across extensive experiments on diverse datasets from orthopedic surgery and radiotherapy, `PolyPose` provides accurate 3D alignment in challenging sparse-view and limited-angle settings where current registration methods fail.
 
@@ -91,7 +95,7 @@ Deformable 2D/3D registration is a long-standing challenge. The central obstacle
 
 <Figure>
   <Image slot="figure" source={polyexplain} altText="Illustration of polyrigid deformation fields." />
-  <Fragment slot="caption">Illustration of a polyrigid deformation constructed from the transforms of 21 rigid bodies (skull, L/R clavicle, L/R humerus, L/R scapula, and T7-C1). Vectors in the deformation field are colored by the relative contributions of each rigid body.</Fragment>
+  <Fragment slot="caption">Illustration of a polyrigid deformation constructed from the transforms of 26 rigid bodies (skull, L/R clavicle, L/R humerus, L/R scapula, and T12-C1). Vectors in the deformation field are colored by the relative contributions of each rigid body.</Fragment>
 </Figure>
 
 ### Contributions
@@ -101,6 +105,30 @@ The key advantages of `PolyPose` are:
 - Our low-dimensional model is far easier to optimize than dense displacement fields, while being just as expressive.
 - Our method is regularizer- and hyperparameter-free, enabling out-of-the-box generalization to new procedures.
 - Our anatomically motivated model is robust in challenging sparse-view and limited-angle settings.
+
+## Results
+
+### Radiotherapy
+
+<Figure>
+  <Image slot="figure" source={hn_qualitative} altText="Warped CTs for Head&Neck dataset." />
+  <Fragment slot="caption">Warped CTs produced by different registration algorithms and overlays on the ground truth volume.</Fragment>
+</Figure>
+
+<Figure>
+  <Image slot="figure" source={hn_baselines} altText="Deformation fields." />
+  <Fragment slot="caption">Visualizations of the estimated deformation fields, superimposed on renderings of the warped CT volumes.</Fragment>
+</Figure>
+
+### Orthopedic surgery
+
+<Video source={pelvis_opt} />
+
+<IFrameGrid
+  htmlFiles={['/pelvis/dense_xyz.html', '/pelvis/polypose.html']}
+  titles={['Dense Translations', 'PolyPose (ours)']}
+  gap={'5px'} 
+/>
 
 ## Methods
 
@@ -140,7 +168,7 @@ That is, polyrigid deformations are _locally linear_ transforms, where the displ
 
 <Video source={methods_polyrigid} />
 
-### A neat implementation trick
+### A neat implementation trick...
 
 If you inspect the formula for a polyrigid deformation, you'll notice that we don't operate directly on rigid transformations, but rather on their _log-transformed_ counterparts living in the tangent space <LaTeX inline formula="\mathfrak{se}(3)" />. This yields a very simple implementation, which is demonstrated in pseudocode below (you can find the full implementation [here](https://github.com/eigenvivek/polypose/blob/0456613f7970f66af2324e34fb678d359e12be01/src/polypose/warp.py#L73-L111)):
 
@@ -157,6 +185,12 @@ def polyrigid_deformation_field(
     warped_volume = grid_sample(volume, deformation_field)
     return warped_volume
 ```
+
+### ...and a final fun GIF 
+
+Shows the evolution of polyrigid deformation field over the first few iterations of optimization.
+
+<Video source={warp_field} />
 
 ## Future Work
 
