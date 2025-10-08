@@ -108,27 +108,42 @@ The key advantages of `PolyPose` are:
 
 ## Results
 
-### Radiotherapy
+### Sparse-view 2D/3D registration in radiotherapy
+
+`PolyPose` could be very useful in radiotherapy by matching a pre-interventional 3D radiation plan to the patient's current position in the treatment room. We demonstrate the capability of `PolyPose` to track sensitive soft tissues in X-ray using the [Head&Neck](https://www.cancerimagingarchive.net/collection/head-neck-pet-ct/) dataset, a collection of longitudinal CTs from patients with head and neck squamous cell carcinoma.
+
+
+The figure below shows warped CTs produced by different 2D/3D and 3D/3D registration algorithms **from 3 input X-ray images.** `PolyPose` estimates the most accurate deformation fields the highest 3D Dice on both rigid structures and important soft tissue organs, _even though the pose of these organs was not directly estimated during optimization!_
 
 <Figure>
   <Image slot="figure" source={hn_qualitative} altText="Warped CTs for Head&Neck dataset." />
-  <Fragment slot="caption">Warped CTs produced by different registration algorithms and overlays on the ground truth volume.</Fragment>
+  <Fragment slot="caption">Warped CTs produced by different registration methods, along with overlays on the ground truth volume.</Fragment>
 </Figure>
+
+The deformation fields estimated by `PolyPose` also have minimal topological defects. Because our warps are constructed from a small number of rigid components, their deformation fields are more interpretable and anatomically plausible than the baselines.
 
 <Figure>
   <Image slot="figure" source={hn_baselines} altText="Deformation fields." />
-  <Fragment slot="caption">Visualizations of the estimated deformation fields, superimposed on renderings of the warped CT volumes.</Fragment>
+  <Fragment slot="caption">Visualizations of the estimated deformation fields, superimposed on renderings of the warped CT volumes. Note that only `PolyPose` recovers the subtle head motion.</Fragment>
 </Figure>
 
-### Orthopedic surgery
+### Limited-angle 2D/3D registration in orthopedic surgery
+
+`PolyPose` is also amenable to many applications in orthopedic surgery, where tracking the soft tissue deformations induced by multiple articulated structures is a central challenge. Using the [DeepFluoro](https://github.com/rg2/DeepFluoroLabeling-IPCAI2020) dataset, we show that `PolyPose` can successfully register a CT to a pair of X-ray images spaced only ~30° apart.
+
+Below, we compare `PolyPose` to two other parameterizations of a dense deformation field: per-voxel <LaTeX inline formula="\mathbf{SE}(3)" /> transformations and translations, also optimized via differentiable rendering. These dense deformation parameterizations estimate warps that reproduce the appearance of the training X-rays, achieving much higher image similarity metrics than `PolyPose`.
 
 <Video source={pelvis_opt} />
+
+However, if you compare the estimated warps, you can see that only `PolyPose` successfully recovers the true anatomical motion in this scene (external rotation of the femurs).
 
 <IFrameGrid
   htmlFiles={['/pelvis/dense_xyz.html', '/pelvis/polypose.html']}
   titles={['Dense Translations', 'PolyPose (ours)']}
-  gap={'5px'} 
+  gap={'2px'} 
 />
+
+This is because `PolyPose` has only <LaTeX inline formula="\mathcal O(K)" /> optimizable parameters and is thus well suited for ill-posed settings, whereas the under-constrained dense representations have <LaTeX inline formula="\mathcal O(M)" /> parameters with <LaTeX inline formula="K \ll M" />. Here, <LaTeX inline formula="K=3" /> and <LaTeX inline formula="M = 398 \times 197 \times 390 \approx 10^7" />.
 
 ## Methods
 
@@ -186,9 +201,9 @@ def polyrigid_deformation_field(
     return warped_volume
 ```
 
-### ...and a final fun GIF 
+### ...and a final fun GIF ☠️
 
-Shows the evolution of polyrigid deformation field over the first few iterations of optimization.
+Shows the evolution of a polyrigid deformation field over the first few iterations of optimization.
 
 <Video source={warp_field} />
 

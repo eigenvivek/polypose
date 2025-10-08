@@ -3,7 +3,7 @@
     "ignorePaths": [],
     "dictionaryDefinitions": [],
     "dictionaries": [],
-    "words": ["intraoperative", "parameterizing", "diffeomorphic", "miscalibrated", "submillimeter", "registration", "polyrigid"],
-    "ignoreWords": ["mathbf", "mathbb", "mathcal", "cammat", "Segmentator", "weightfield", "mathrm", "mathfrak", "triangleq", "einsum", "cdhw", "dhwn", "bibtex", "gopalakrishnan", "polypose", "gopalakrishnan", "vivek", "neel", "golland", "polina", "polyexplain", "frontmatter", "academicons", "NeurIPS"],
+    "words": ["intraoperative", "parameterizing", "diffeomorphic", "miscalibrated", "submillimeter", "registration", "polyrigid", "interventional", "parameterizations"],
+    "ignoreWords": ["mathbf", "mathbb", "mathcal", "cammat", "Segmentator", "weightfield", "mathrm", "mathfrak", "triangleq", "einsum", "cdhw", "dhwn", "bibtex", "gopalakrishnan", "polypose", "gopalakrishnan", "vivek", "neel", "golland", "polina", "polyexplain", "frontmatter", "academicons", "NeurIPS", "DeepFluoro"],
     "import": []
 }
