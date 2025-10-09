@@ -6,8 +6,8 @@
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 
 
-![PolyPose](.github/image.png)
-*Localizing deformable anatomy in 3D from sparse 2D X-ray images using polyrigid transforms.*
+![PolyPose](.github/teaser.webp)
+*Deformable 2D/3D registration via polyrigid transforms ([project page](https://polypose.csail.mit.edu/)).*
 
 ## Highlights
 
@@ -17,7 +17,7 @@ PolyPose is a fully deformable 2D/3D registration framework.
 - 🦾 PolyPose accurately solves this highly ill-constrained problem with polyrigid transforms.
 - 🫀 PolyPose has been tested on multiple anatomical structures from different clinical specialties.
 
-![PolyPose](.github/polypose.webp)
+![PolyPose](.github/baselines.webp)
 
 ## Tutorial
 
