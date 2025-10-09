@@ -7,6 +7,7 @@
 
 
 ![PolyPose](.github/teaser.webp)
+
 *Deformable 2D/3D registration via polyrigid transforms ([project page](https://polypose.csail.mit.edu/)).*
 
 ## Highlights
