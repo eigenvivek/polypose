@@ -70,9 +70,9 @@ If you find `PolyPose` useful for your work, please cite our [paper](https://arx
 
 ```
 @article{gopalakrishnan2025polypose,
-  title={PolyPose: Localizing Deformable Anatomy in 3D from Sparse 2D X-ray Images using Polyrigid Transforms},
+  title={PolyPose: Deformable 2D/3D Registration via Polyrigid Transforms},
   author={Gopalakrishnan, Vivek and Dey, Neel and Golland, Polina},
-  journal={arXiv preprint arXiv:2505.19256},
+  journal={Advances in Neural Information Processing Systems},
   year={2025}
 }
 ```
