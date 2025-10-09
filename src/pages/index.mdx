@@ -135,7 +135,7 @@ Below, we compare `PolyPose` to two other parameterizations of a dense deformati
 
 <Video source={pelvis_opt} />
 
-However, if you compare the estimated warps, you can see that only `PolyPose` successfully recovers the true anatomical motion in this scene (external rotation of the femurs).
+However, if you compare the estimated warps below (_these are 3D models, click and drag them!_), you can see that only `PolyPose` successfully recovers the true anatomical motion in this scene (i.e., external rotation of the femurs).
 
 <IFrameGrid
   htmlFiles={['/pelvis/dense_xyz.html', '/pelvis/polypose.html']}
@@ -160,7 +160,7 @@ Given <LaTeX inline formula="\mathbf{V}" /> and <LaTeX inline formula="\mathbf{I
 
 Accurately estimating the pose of each 2D X-ray image relative to the 3D volume is of vital important for downstream estimation of the non-rigid deformation field. If these camera matrices are miscalibrated, we cannot hope to recover the deformation field  <LaTeX inline formula="\mathbf \Phi" />. 
 
-For this critical task, we use [`xvr`](https://xvr.csail.mit.edu/), the current state-of-the-art method for _rigid_ 2D/3D registration, which enables fully automatic submillimeter-accurate registration. Specifically, we estimate camera matrices by rigidly aligning an anchor structure that is reliably visible in the preoperative 3D volume and all intraoperative 2D views (e.g., the pelvis in the figure below).
+For this critical task, we use [`xvr`](https://xvr.csail.mit.edu/), the current state-of-the-art method for _rigid_ 2D/3D registration, which enables fully automatic submillimeter-accurate C-arm pose estimation. Specifically, we estimate camera matrices by rigidly aligning an anchor structure that is reliably visible in the preoperative 3D volume and all intraoperative 2D views (e.g., the pelvis in the figure below).
 
 <Video source={methods_cammat} />
 
