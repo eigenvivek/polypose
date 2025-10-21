@@ -4,7 +4,7 @@ from diffdrr.pose import RigidTransform
 from jaxtyping import Float
 from torchio import LabelMap, ScalarImage
 
-from .warp import NonRigid, PolyRigid, SE3Field
+from ..warp import NonRigid, PolyRigid, SE3Field
 
 
 class DeformableRenderer(torch.nn.Module):
