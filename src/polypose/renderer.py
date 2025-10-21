@@ -1,5 +1,7 @@
 import torch
 from diffdrr.drr import DRR
+from diffdrr.pose import RigidTransform
+from jaxtyping import Float
 from torchio import LabelMap, ScalarImage
 
 from .warp import NonRigid, PolyRigid, SE3Field
@@ -27,7 +29,7 @@ class DeformableRenderer(torch.nn.Module):
         else:
             raise ValueError(f"Invalid warp: {warp}")
 
-    def forward(self, pose, **kwargs):
+    def forward(self, pose: RigidTransform, **kwargs) -> Float[torch.Tensor, "B 1 H W"]:
         """Render a DRR from the warped density and mask."""
         warped_density, warped_mask = self.warp()
         source, target = self.drr.detector(pose, calibration=None)

@@ -17,7 +17,7 @@ class ImageLoss(torch.nn.Module):
         mncc_patch_size: int = 9,  # Patch size for Multiscale Normalized Cross Correlation
         mncc_weights: List[float] = [0.5, 0.5],  # Weights for the global and local scales
         gncc_patch_size: int = 11,  # Patch size for Gradient Normalized Cross Correlation
-        gncc_sigma: float = 10,  # Sigma for Gradient Normalized Cross Correlation
+        gncc_sigma: float = 0.0,  # Sigma for Gradient Normalized Cross Correlation
     ):
         super().__init__()
         self.sim1 = MultiscaleNormalizedCrossCorrelation2d([None, mncc_patch_size], mncc_weights)
