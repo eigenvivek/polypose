@@ -16,7 +16,7 @@ def plot(
     losses: Optional[Float[torch.Tensor, " B"]] = None,  # NCC for each image
     savepath: Optional[str] = None,  # If not None, save frame to savepath
     dpi: int = 100,  # DPI for each frame
-):
+) -> None:
     render = img.sum(dim=1, keepdim=True)
     imgs = torch.concat([gt, render])
 
@@ -47,7 +47,7 @@ def plot(
         plt.close()
 
 
-def gif(imgpath: str, savepath: str, fps: int = 10, loop: bool = True):
+def gif(imgpath: str, savepath: str, fps: int = 10, loop: bool = True) -> None:
     imgpath = Path(imgpath)
     imgs = [Image.open(p).convert("RGB") for p in sorted(imgpath.glob("*.png"))]
     imgs[0].save(
@@ -69,7 +69,7 @@ def plot_weights(
     index: int = None,  # Index on a given dimension
     cmap: str = "gist_rainbow",  # Name of matplotlib colormap
     rot90: int = 1,  # Number of times to rotate slices by 90 degrees
-):
+) -> None:
     # Make sure the tensors are on CPU
     segmentations = segmentations.cpu()
     weights = weights.cpu()
@@ -120,5 +120,5 @@ def plot_weights(
     plt.show()
 
 
-def remove_at_index(tup, index):
+def remove_at_index(tup: tuple, index: int) -> tuple:
     return tup[:index] + tup[index + 1 :]
