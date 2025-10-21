@@ -1,5 +1,7 @@
 # Project files
 data/
+results/
+misc/
 
 # Jupyter files
 .ipynb_checkpoints/
@@ -14,3 +16,9 @@ wheels/
 
 # Virtual environments
 .venv
+
+# GitHub pages files
+.astro/
+.vscode/
+node_modules/
+src/components/
