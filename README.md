@@ -59,9 +59,11 @@ Or you can set up the packages using [`uv`](https://docs.astral.sh/uv/):
 # Install uv, if necessary
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Set up the virtual environment
-uv venv
-uv sync --all-groups
+# Set up the virtual environment with all dev requirements
+uv sync --all-extras
+
+# Install pre-commit hooks locally
+uvx pre-commit install
 ```
 
 ## Citing `PolyPose`
