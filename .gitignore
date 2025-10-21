@@ -14,3 +14,9 @@ wheels/
 
 # Virtual environments
 .venv
+
+# GitHub pages files
+.astro/
+.vscode/
+node_modules/
+src/components/

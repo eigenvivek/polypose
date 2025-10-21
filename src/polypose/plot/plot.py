@@ -73,7 +73,7 @@ def plot_weights(
     # Make sure the tensors are on CPU
     segmentations = segmentations.cpu()
     weights = weights.cpu()
-    
+
     # Normalize the weight field
     alpha = weights.sum(dim=0)
     weights = weights / alpha
