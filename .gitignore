@@ -1,7 +1,8 @@
 # Project files
 data/
-results/
+logs/
 misc/
+results/
 
 # Jupyter files
 .ipynb_checkpoints/
