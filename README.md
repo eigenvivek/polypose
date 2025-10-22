@@ -66,6 +66,24 @@ uv sync --all-extras
 uvx pre-commit install
 ```
 
+## Experiments
+
+To run the experiments in `PolyPose` on the `DeepFluoro` dataset, run the following scripts.
+
+```
+# Download the DeepFluoro dataset
+uv run hf download eigenvivek/xvr-data --repo-type dataset
+
+# Run PolyPose and baselines
+cd experiments/deepfluoro/
+sbatch run.sh
+
+# Run the evaluation script once all jobs are finished
+uv run python eval.py
+```
+
+`run.sh` is written with SLURM and is configured to run in parallel on a cluster of RTX A6000s.
+
 ## Citing `PolyPose`
 
 If you find `PolyPose` useful for your work, please cite our [paper](https://arxiv.org/abs/2505.19256):
